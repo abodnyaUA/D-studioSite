@@ -2,9 +2,7 @@
 var links = ['joinit','joinh','hell','letters'];
 var titles = ['Join It','Join the Hearts','Hell Puzzle','Letters App'];
 var subtitles = ['Jigsaw Puzzle','Jigsaw Puzzle','',''];
-var tags = ['puzzle','ipad game','ios','join the hearts','puzzles','puzles','haloween','hell','ipad games','baby game',
-			'пазлы','пазлики','буквочки','игра для ipad','игры для ipad','игра для ipod','игры для ipod','игра для iphone','игры для iphone',
-			'пазлы для айпада','пазлики для девочек','пазлы на день валентина','для самых маленьких'];
+var tags = ['puzzle','ipad game','ios','join the hearts','puzzles','puzles','haloween','hell','ipad games','baby game'];
 
 function loadMenu () 
 {
