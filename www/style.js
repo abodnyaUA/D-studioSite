@@ -4,6 +4,10 @@ var titles = ['Join It','Join the Hearts','Hell Puzzle','Letters App'];
 var subtitles = ['Jigsaw Puzzle','Jigsaw Puzzle','',''];
 var tags = ['puzzle','ipad game','ios','join the hearts','puzzles','puzles','haloween','hell','ipad games','baby game'];
 
+var descriptionPath = "";
+var posterPath = "";
+var screenshots = [];
+
 function loadMenu () 
 {
 	var content = "<table>";
@@ -50,7 +54,7 @@ function groupNumberWithID (id)
 function descriptionForProduct (id) 
 {
 	var request = new XMLHttpRequest();
-	request.open("GET",'site/'+id+'.txt',true);
+	request.open("GET",descriptionPath,true);
 	request.onreadystatechange = function ()
 	{
 		if (request.readyState == 4)
@@ -69,10 +73,39 @@ function descriptionForProduct (id)
 	// body...
 }
 
+function loadFieldsWithJSONFromPHPScript(id)
+{
+	var request = new XMLHttpRequest();
+	request.open("GET",'site/finder.php?product='+id,true);
+	request.onreadystatechange = function ()
+	{
+		if (request.readyState == 4)
+		{
+			if (request.status == 200)
+			{
+				var json = request.responseText;
+				var data = JSON.parse(json);
+				descriptionPath = data.description_path;
+				posterPath = data.poster_path;
+				for (var i = 0; i < data.screenshots.length; i++) 
+				{
+					screenshots.push(data.screenshots[i])
+				};
+				loadContentForProduct(id);
+			}
+			else
+			{
+				alert('Some problems');
+			}
+		}
+	}
+	request.send(null);
+}
+
 function loadContentForProduct(id)
 {
 	var index = groupNumberWithID(id);
-	var content = '<div class="logoElement"><img src="site/'+id+'.png"></div>';
+	var content = '<div class="logoElement"><img src="'+posterPath+'"></div>';
 	content += '<div class="description">';
 	content += '<h3>'+titles[index]+'</h3>'
 	content += '<span class="simpleText" id="descriptionFromText">';
@@ -81,8 +114,8 @@ function loadContentForProduct(id)
 	content += '<h4>Screenshots:</h4>';
 	for (var i = 0; i < 3; i++) 
 	{
-		content += '<div class="screenshot"><a href="site/'+id+'-screen_'+(i+1)+'.png" rel="lightbox[screen]" title="">';
-		content += '<img src="site/'+id+'-screen_'+(i+1)+'.png" class="screenshot"></a></div>';
+		content += '<div class="screenshot"><a href="'+screenshots[i]+'" rel="lightbox[screen]" title="">';
+		content += '<img src="'+screenshots[i]+'" class="screenshot"></a></div>';
 	};
 	content += "</div>";
 	document.getElementById('productDescription').innerHTML = content;
@@ -92,5 +125,5 @@ function loadStyle (productName)
 {
 	loadMenu();
 	loadHead();
-	if (productName != null) loadContentForProduct(productName);
+	if (productName != null) loadFieldsWithJSONFromPHPScript(productName);
 }
